@@ -1,0 +1,31 @@
+.app-container {
+  max-width: 1300px;
+  margin: 0 auto;
+
+  .title-btn-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    column-gap: 30px;
+    padding-top: 30px;
+    margin-bottom: 30px;
+  }
+
+  .app-title {
+    font-weight: 600;
+    font-size: 18px;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .add-button {
+    background: #000;
+    color: #fff;
+    max-width: 130px;
+    width: 100%;
+    min-height: 30px;
+    padding: 5px;
+    border-radius: 5px;
+  }
+}
