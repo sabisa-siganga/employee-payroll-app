@@ -1,6 +1,7 @@
 .app-container {
   max-width: 1300px;
   margin: 0 auto;
+  padding-bottom: 60px;
 
   .title-btn-container {
     display: flex;
@@ -20,12 +21,8 @@
   }
 
   .add-button {
-    background: #000;
-    color: #fff;
-    max-width: 130px;
+    max-width: 165px;
     width: 100%;
     min-height: 30px;
-    padding: 5px;
-    border-radius: 5px;
   }
 }

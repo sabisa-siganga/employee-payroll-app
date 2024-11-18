@@ -1,10 +1,35 @@
 .employee-table {
-  .table {
+  margin-bottom: 60px;
+  table {
+    @apply table-auto table border-collapse border border-slate-800 px-4 py-4;
     border: 1px solid #000;
     width: 100%;
 
     thead {
       border-bottom: 1px solid #000;
+
+      th {
+        @apply border-collapse border border-slate-800 text-left px-4;
+        background-color: #ccc;
+        font-weight: 500;
+      }
+    }
+
+    td {
+      @apply border-collapse border border-slate-800 text-left px-4 py-0.5;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+    }
+
+    tr {
+      &.blue {
+      }
+
+      &:hover {
+        td {
+          background-color: #95bcf2;
+        }
+      }
     }
   }
 }
