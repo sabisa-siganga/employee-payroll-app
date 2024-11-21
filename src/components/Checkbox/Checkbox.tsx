@@ -1,8 +1,8 @@
 import React, { ChangeEvent, ForwardedRef, forwardRef } from "react";
 import "./Checkbox.scss";
-import { FieldErrors } from "react-hook-form";
 import { FaCheck } from "react-icons/fa";
 
+// Define the props interface for the CheckBox component
 interface Props {
   className?: string;
   id?: string;
@@ -11,13 +11,14 @@ interface Props {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   checked?: boolean;
   defaultChecked?: boolean;
-  errors?: FieldErrors;
-  type?: "radio";
+  type?: "radio"; // Default type is "radio"
   variant: "circle" | "box";
 }
 
+// Create the CheckBox component with forwardRef to pass refs to the DOM element
 const CheckBox = forwardRef(
   (props: Props, ref: ForwardedRef<HTMLInputElement>) => {
+    // Destructure props
     const {
       id,
       label,
@@ -26,16 +27,15 @@ const CheckBox = forwardRef(
       className,
       checked,
       defaultChecked,
-      errors,
       type = "radio",
       variant,
     } = props;
 
-    const error = errors && name && errors[name];
-
     return (
       <div className={`check-box ${className ?? ""} ${variant}`}>
+        {/* Container for input and label */}
         <div className="input-container flex">
+          {/* Circle variant checkbox */}
           {variant === "circle" && (
             <input
               type={type}
@@ -47,7 +47,7 @@ const CheckBox = forwardRef(
               defaultChecked={defaultChecked}
             />
           )}
-
+          {/* Box variant checkbox */}
           {variant === "box" && (
             <div className="check-input">
               <input
@@ -59,15 +59,16 @@ const CheckBox = forwardRef(
                 checked={checked}
                 defaultChecked={defaultChecked}
               />
+
+              {/* Icon for the box variant */}
               <div className="check-icon">
                 <FaCheck />
               </div>
             </div>
           )}
+          {/* Checkbox label */}
           <label htmlFor={id}>{label}</label>
         </div>
-
-        {error && <p className="error-message">{error.message?.toString()}</p>}
       </div>
     );
   }

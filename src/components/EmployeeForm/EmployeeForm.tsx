@@ -14,10 +14,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { useForm } from "react-hook-form";
 
+// Predefined salutation options for the Select dropdown
 const salutationSelect = [
   {
     label: "Select salutation",
-    value: "Select salutation",
+    value: "",
   },
   {
     label: "Dr.",
@@ -41,7 +42,12 @@ const salutationSelect = [
   },
 ];
 
+const formatNumberWithSpaces = (value: string) => {
+  return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+};
+
 const EmployeeForm = () => {
+  // State for managing gender radio button selections
   const [gender, setGender] = useState([
     {
       checked: false,
@@ -56,6 +62,8 @@ const EmployeeForm = () => {
       genderItem: "Unspecified",
     },
   ]);
+
+  // State for managing profile color radio button selections
   const [profileColors, setProfileColors] = useState([
     {
       checked: false,
@@ -75,31 +83,53 @@ const EmployeeForm = () => {
     },
   ]);
 
+  // Access employee data from the Redux store
   const { employeeData } = useSelector((state: RootState) => state.employee);
 
+  // Hook to dispatch Redux actions
   const dispatch = useDispatch();
 
+  // React Hook Form for managing form validation and submission
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<EmployeeData>({
-    mode: "all",
-    defaultValues: employeeData,
+    setValue,
+  } = useForm<Employee>({
+    mode: "all", // Enable validation on any change
+    defaultValues: {
+      firstName: "",
+      fullName: "",
+      lastName: "",
+      grossSalary: "",
+      salutation: "",
+      profileColour: "",
+      gender: "",
+      employeeNumber: "",
+    },
   });
 
+  // Cancel button handler: Dispatches an action to cancel all changes
   const onCancel = () => {
     dispatch(employeeFormHandler(false));
   };
-  // const onSave = () => {
-  //   dispatch(addEmployee());
-  // };
+
+  // Save button handler: Placeholder for dispatching an action to save employee data
+  const onSave = (employee: Employee) => {
+    // dispatch(());
+  };
+
+  React.useEffect(() => {
+    console.log(errors);
+  }, [errors]);
 
   return (
     <div className="employee-form">
       <div className="form-title">Employee Information</div>
-      <form>
+      {/* Form submission handler */}
+      <form onSubmit={handleSubmit(onSave)}>
+        {/* Form buttons */}
         <div className="form-btns flex center">
           <Button className="cancel-btn" onClick={onCancel}>
             Cancel
@@ -108,15 +138,17 @@ const EmployeeForm = () => {
             Save
           </Button>
         </div>
+        {/* Form input fields */}
         <div className="input-fields-container">
           <div className="left-fields">
             <InputField
               inputLabel="First Name(s)"
               placeholder="Please enter first name(s)"
               type="text"
+              required
               defaultValue={employeeData.data?.firstName}
-              {...register("data.firstName", {
-                required: "First Name is required",
+              {...register("firstName", {
+                required: "First Name(s) is required",
                 pattern: {
                   value: /^[A-Za-z\s]+$/i, // Regular expression to allow only alphabets and spaces
                   message: "First Name should contain only alphabets",
@@ -130,7 +162,7 @@ const EmployeeForm = () => {
               type="text"
               required
               defaultValue={employeeData.data?.lastName}
-              {...register("data.lastName", {
+              {...register("lastName", {
                 required: "Last Name is required",
                 pattern: {
                   value: /^[A-Za-z\s]+$/i, // Regular expression to allow only alphabets and spaces
@@ -139,33 +171,48 @@ const EmployeeForm = () => {
               })}
               errors={errors}
             />
+
+            {/* Salutation dropdown */}
             <Select
               selectLabel="Salutation"
               className="form-select required"
               options={salutationSelect}
-              {...register("data.salutation", {
+              {...register("salutation", {
                 required: "Salutation is required",
               })}
               errors={errors}
             />
+
+            {/* Gender radio buttons */}
             <div className="radio-btns-container">
-              <label className="required">Gender</label>
-              <div className="radio-btns">
-                {gender.map((data, index) => {
-                  return (
-                    <CheckBox
-                      key={index}
-                      id={`gender-${index}`}
-                      className="radio-btn"
-                      label={data.genderItem}
-                      name="gender"
-                      type="radio"
-                      variant="circle"
-                      // checked={data.checked}
-                    />
-                  );
-                })}
+              <div className="flex">
+                <label className="required">Gender</label>
+                <div className="radio-btns">
+                  {gender.map((data, index) => {
+                    return (
+                      <CheckBox
+                        key={index}
+                        id={`gender-${index}`}
+                        className="radio-btn"
+                        label={data.genderItem}
+                        type="radio"
+                        variant="circle"
+                        // defaultChecked={d}
+                        {...register("gender", {
+                          required: "Gender is required",
+                        })}
+                      />
+                    );
+                  })}
+                </div>
               </div>
+
+              {/* Display validation error message if any */}
+              {errors.gender && (
+                <p className="error-message">
+                  {errors.gender.message?.toString()}
+                </p>
+              )}
             </div>
 
             <InputField
@@ -174,7 +221,7 @@ const EmployeeForm = () => {
               type="number"
               required
               defaultValue={employeeData.data?.employeeNumber}
-              {...register("data.employeeNumber", {
+              {...register("employeeNumber", {
                 required: "Employee number is required",
                 pattern: {
                   value: /^[0-9]+$/, // Regular expression to allow only numbers
@@ -191,9 +238,9 @@ const EmployeeForm = () => {
               inputLabel="Full Name"
               placeholder="Please enter full name"
               type="number"
-              defaultValue={employeeData.data?.firstName}
-              {...register("data.firstName", {
-                required: "First Name is required",
+              defaultValue={employeeData.data?.fullName}
+              {...register("fullName", {
+                required: "Full Name is required",
               })}
               errors={errors}
             />
@@ -202,30 +249,52 @@ const EmployeeForm = () => {
               inputLabel="Gross Salary $PY"
               placeholder="Please enter employee gross salary"
               type="number"
-              defaultValue={employeeData.data?.firstName}
-              {...register("data.grossSalary", {
+              // value={grossSalary} // Controlled input value
+              onInput={(e) => {
+                const formattedValue = formatNumberWithSpaces(e.target.value);
+                setValue("grossSalary", formattedValue, {
+                  shouldValidate: true,
+                }); // Update field value
+              }}
+              defaultValue={employeeData.data?.grossSalary}
+              {...register("grossSalary", {
                 required: "Gross Salary is required",
+                pattern: {
+                  value: /^[0-9]+$/, // Regular expression to allow only numbers
+                  message: "Employee number must contain only numbers",
+                },
               })}
               errors={errors}
             />
             <div className="radio-btns-container">
-              <label>Employee Profile Colour</label>
-              <div className="radio-btns">
-                {profileColors.map((item, index) => {
-                  return (
-                    <CheckBox
-                      key={index}
-                      id={`color-${index}`}
-                      className="form-checkbox"
-                      label={item.profileColor}
-                      name="profile-color"
-                      type="radio"
-                      variant="box"
-                      // checked={item.checked}
-                    />
-                  );
-                })}
+              <div className="flex">
+                <label>Employee Profile Colour</label>
+                <div className="radio-btns">
+                  {profileColors.map((item, index) => {
+                    return (
+                      <CheckBox
+                        key={index}
+                        id={`color-${index}`}
+                        className="form-checkbox"
+                        label={item.profileColor}
+                        type="radio"
+                        variant="box"
+                        // checked={item.checked}
+                        {...register("profileColour", {
+                          required: "Profile colour is required",
+                        })}
+                      />
+                    );
+                  })}
+                </div>
               </div>
+
+              {/* Display validation error message if any */}
+              {errors.profileColour && (
+                <p className="error-message">
+                  {errors.profileColour.message?.toString()}
+                </p>
+              )}
             </div>
           </div>
         </div>

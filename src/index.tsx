@@ -5,11 +5,14 @@ import App from "./components/App/App";
 import reportWebVitals from "./reportWebVitals";
 import { StoreProvider } from "./store/StoreProvider";
 
+// Create a root DOM node for rendering the React app
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+// Render the React application
 root.render(
   <React.StrictMode>
+    {/* Provide Redux store to the application */}
     <StoreProvider>
       <App />
     </StoreProvider>

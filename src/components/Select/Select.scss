@@ -1,24 +1,28 @@
 .select-cont {
   margin-bottom: 20px;
 
-  label {
-    font-size: 15px;
-    font-weight: 400;
-    color: #000;
+  .select-container {
+    display: flex;
 
-    &:after {
-      content: "*";
-      color: red;
-      font-size: 18px;
+    label {
+      font-size: 15px;
+      font-weight: 400;
+      color: #000;
+
+      &:after {
+        content: "*";
+        color: red;
+        font-size: 18px;
+      }
     }
-  }
-  select {
-    max-width: 300px;
-    width: 100%;
-    border: 1px solid #000;
-    border-radius: 5px;
-    min-height: 35px;
-    outline: none;
-    padding: 2px 5px;
+    select {
+      max-width: 300px;
+      width: 100%;
+      border: 1px solid #000;
+      border-radius: 5px;
+      min-height: 35px;
+      outline: none;
+      padding: 2px 5px;
+    }
   }
 }
