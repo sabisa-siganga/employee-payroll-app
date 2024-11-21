@@ -1,17 +1,10 @@
 import React from "react";
 import "./Table.scss";
-
-export interface EmployeeData {
-  employeeNumber: string;
-  firstName: string;
-  lastName: string;
-  salutation: string;
-  profileColor: string;
-}
+import { Employee } from "../../store/slices/employeeSlice";
 
 interface Props {
-  data: EmployeeData[];
-  onRowSelect: (data: EmployeeData) => void;
+  data: Employee[];
+  onRowSelect: (index: number) => void;
 }
 
 const Table = (props: Props) => {
@@ -33,14 +26,14 @@ const Table = (props: Props) => {
           {data.map((employee, index) => (
             <tr
               key={`employee-table-row-${index}`}
-              onClick={() => onRowSelect(employee)}
-              className={employee.profileColor.toLowerCase()}
+              onClick={() => onRowSelect(index)}
+              className={employee.profileColour.toLowerCase()}
             >
               <td>{employee.employeeNumber}</td>
               <td>{employee.firstName}</td>
               <td>{employee.lastName}</td>
               <td>{employee.salutation}</td>
-              <td>{employee.profileColor}</td>
+              <td>{employee.profileColour}</td>
             </tr>
           ))}
         </tbody>

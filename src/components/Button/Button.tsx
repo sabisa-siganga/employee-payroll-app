@@ -2,17 +2,18 @@ import React from "react";
 import "./Button.scss";
 
 interface Props {
-  buttonName: string;
   type?: "submit" | "button";
   className: string;
+  children: React.ReactNode;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const Button = (props: Props) => {
-  const { buttonName, className, type = "button" } = props;
+  const { children, className, type = "button", onClick } = props;
 
   return (
-    <button type={type} className={`btn ${className ?? ""}`}>
-      {buttonName}
+    <button onClick={onClick} type={type} className={`btn ${className ?? ""}`}>
+      {children}
     </button>
   );
 };

@@ -57,6 +57,13 @@
         justify-content: space-between;
         flex: 1;
         max-width: 335px;
+
+        .radio-btn {
+          .input-container {
+            align-items: center;
+            column-gap: 8px;
+          }
+        }
       }
 
       .right-fields {
@@ -79,6 +86,44 @@
             max-width: 200px;
             width: 100%;
           }
+
+          .form-checkbox {
+            .input-container {
+              align-items: center;
+              column-gap: 8px;
+
+              .check-input {
+                position: relative;
+
+                input {
+                  position: absolute;
+                  z-index: 1;
+                  opacity: 0;
+                }
+
+                .check-icon {
+                  display: flex;
+                  align-items: center;
+                  width: 12px;
+                  height: 12px;
+                  border: 1px solid #7b7c7c;
+                  transition: border 0.1s ease-in-out;
+
+                  svg {
+                    width: 10px;
+                    height: 10px;
+                    fill: transparent;
+                  }
+                }
+
+                input:checked ~ .check-icon {
+                  svg {
+                    fill: #000;
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -87,8 +132,8 @@
 
 .required {
   &:after {
-    content: " *";
-    color: red;
+    content: "*";
+    color: #ff0000;
     font-size: 18px;
   }
 }
