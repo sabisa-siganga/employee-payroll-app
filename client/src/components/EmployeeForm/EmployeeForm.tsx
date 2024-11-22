@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import "./EmployeeForm.scss";
 import InputField from "../InputField/InputField";
 import Button from "../Button/Button";
 import Select from "../Select/Select";
-import CheckBox from "../Checkbox/Checkbox";
+
 import {
   addEmployee,
   Employee,
-  EmployeeData,
   employeeFormHandler,
 } from "../../store/slices/employeeSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,7 +16,7 @@ import CheckboxGroup from "../CheckboxGroup/CheckboxGroup";
 import { SelectOption } from "../../interfaces/types";
 
 // Predefined salutation options for the Select dropdown
-const salutationSelect = [
+const salutationSelect: SelectOption[] = [
   {
     label: "Select salutation",
     value: "",
@@ -44,47 +43,45 @@ const salutationSelect = [
   },
 ];
 
+const profileColors: SelectOption[] = [
+  {
+    value: "green",
+    label: "Green",
+  },
+  {
+    value: "blue",
+    label: "Blue",
+  },
+  {
+    value: "red",
+    label: "Red",
+  },
+  {
+    value: "default",
+    label: "Default",
+  },
+];
+
+const gender = [
+  {
+    value: "male",
+    label: "Male",
+  },
+  {
+    value: "female",
+    label: "Female",
+  },
+  {
+    value: "unspecified",
+    label: "Unspecified",
+  },
+];
+
 const formatNumberWithSpaces = (value: string) => {
   return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 };
 
 const EmployeeForm = () => {
-  // State for managing gender radio button selections
-  const [gender, setGender] = useState<SelectOption[]>([
-    {
-      value: false,
-      label: "Male",
-    },
-    {
-      value: false,
-      label: "Female",
-    },
-    {
-      value: false,
-      label: "Unspecified",
-    },
-  ]);
-
-  // State for managing profile color radio button selections
-  const [profileColors, setProfileColors] = useState<SelectOption[]>([
-    {
-      value: false,
-      label: "Green",
-    },
-    {
-      value: false,
-      label: "Blue",
-    },
-    {
-      value: false,
-      label: "Red",
-    },
-    {
-      value: true,
-      label: "Default",
-    },
-  ]);
-
   // Access employee data from the Redux store
   const { employeeData } = useSelector((state: RootState) => state.employee);
 
@@ -95,14 +92,14 @@ const EmployeeForm = () => {
   const {
     register,
     handleSubmit,
-    control,
-    formState: { errors },
+    watch,
+
+    formState: { errors, isValid },
     setValue,
   } = useForm<Employee>({
     mode: "all", // Enable validation on any change
     defaultValues: {
       firstName: "",
-      fullName: "",
       lastName: "",
       grossSalary: "",
       salutation: "",
@@ -112,19 +109,19 @@ const EmployeeForm = () => {
     },
   });
 
+  const formValues = watch();
+
   // Cancel button handler: Dispatches an action to cancel all changes
   const onCancel = () => {
     dispatch(employeeFormHandler(false));
   };
 
   // Save button handler: Placeholder for dispatching an action to save employee data
-  const onSave = (employee: Employee) => {
+  const onSave = (data: Employee) => {
     // dispatch(());
-  };
 
-  React.useEffect(() => {
-    console.log(errors);
-  }, [errors]);
+    addEmployee(data);
+  };
 
   return (
     <div className="employee-form">
@@ -136,7 +133,7 @@ const EmployeeForm = () => {
           <Button className="cancel-btn" onClick={onCancel}>
             Cancel
           </Button>
-          <Button type="submit" className="save-btn">
+          <Button disabled={!isValid} type="submit" className="save-btn">
             Save
           </Button>
         </div>
@@ -205,7 +202,7 @@ const EmployeeForm = () => {
               {...register("employeeNumber", {
                 required: "Employee number is required",
                 pattern: {
-                  value: /^[0-9]+$/, // Regular expression to allow only numbers
+                  value: /^[A-z0-9]+$/,
                   message: "Employee number must contain only numbers",
                 },
               })}
@@ -218,11 +215,11 @@ const EmployeeForm = () => {
               className="field"
               inputLabel="Full Name"
               placeholder="Please enter full name"
-              type="number"
+              type="text"
+              readOnly
+              name="fullName"
+              value={`${formValues.firstName} ${formValues.lastName}`.trim()}
               defaultValue={employeeData.data?.fullName}
-              {...register("fullName", {
-                required: "Full Name is required",
-              })}
               errors={errors}
             />
             <InputField
@@ -241,7 +238,6 @@ const EmployeeForm = () => {
               }}
               defaultValue={employeeData.data?.grossSalary}
               {...register("grossSalary", {
-                required: "Gross Salary is required",
                 pattern: {
                   value: /^[0-9]+$/,
                   message: "Employee number must contain only numbers",

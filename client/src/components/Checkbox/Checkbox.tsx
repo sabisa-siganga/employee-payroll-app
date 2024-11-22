@@ -31,6 +31,7 @@ const CheckBox = forwardRef(
       defaultChecked,
       type = "radio",
       variant,
+      ...rest
     } = props;
 
     return (
@@ -40,6 +41,7 @@ const CheckBox = forwardRef(
           {/* Circle variant checkbox */}
           {variant === "circle" && (
             <input
+              {...rest}
               type={type}
               ref={ref}
               id={id}
@@ -54,6 +56,7 @@ const CheckBox = forwardRef(
           {variant === "box" && (
             <div className="check-input">
               <input
+                {...rest}
                 type={type}
                 ref={ref}
                 value={value?.toString()}

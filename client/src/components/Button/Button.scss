@@ -5,4 +5,8 @@
   min-width: 125px;
   background: #dddddd;
   color: #000;
+
+  &:disabled {
+    opacity: 0.5;
+  }
 }

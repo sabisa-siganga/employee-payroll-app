@@ -6,6 +6,7 @@ import { FieldErrors } from "react-hook-form";
 interface Props {
   className?: string;
   placeholder: string;
+  readOnly?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string;
   type?: "text" | "radio" | "email" | "checkbox" | "number"; // Supported input types
@@ -33,6 +34,7 @@ const InputField = forwardRef(
       defaultValue,
       errors,
       name,
+      readOnly,
       onInput,
     } = props;
 
@@ -51,6 +53,7 @@ const InputField = forwardRef(
             onChange={onChange}
             value={value}
             placeholder={placeholder}
+            readOnly={readOnly}
             id={id}
             ref={ref}
             defaultValue={defaultValue}

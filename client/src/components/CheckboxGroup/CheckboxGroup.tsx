@@ -9,12 +9,12 @@ interface Props {
   label: string;
   name: string;
   errors?: FieldErrors;
-  options: SelectOption[]
+  options: SelectOption[];
 }
 
 const CheckboxGroup = forwardRef(
   (props: Props, ref: ForwardedRef<HTMLInputElement>) => {
-    const { required, label, errors, options, name } = props;
+    const { required, label, errors, options, name, ...rest } = props;
 
     const error = errors && errors[name];
 
@@ -26,6 +26,7 @@ const CheckboxGroup = forwardRef(
             {options.map((option, index) => {
               return (
                 <CheckBox
+                  {...rest}
                   key={`checkbox-group-key-${index}`}
                   id={`checkbox-group-${index}-${name}`}
                   className="radio-btn"
