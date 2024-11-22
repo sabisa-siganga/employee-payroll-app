@@ -13,6 +13,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { useForm } from "react-hook-form";
+import CheckboxGroup from "../CheckboxGroup/CheckboxGroup";
+import { SelectOption } from "../../interfaces/types";
 
 // Predefined salutation options for the Select dropdown
 const salutationSelect = [
@@ -48,38 +50,38 @@ const formatNumberWithSpaces = (value: string) => {
 
 const EmployeeForm = () => {
   // State for managing gender radio button selections
-  const [gender, setGender] = useState([
+  const [gender, setGender] = useState<SelectOption[]>([
     {
-      checked: false,
-      genderItem: "Male",
+      value: false,
+      label: "Male",
     },
     {
-      checked: false,
-      genderItem: "Female",
+      value: false,
+      label: "Female",
     },
     {
-      checked: false,
-      genderItem: "Unspecified",
+      value: false,
+      label: "Unspecified",
     },
   ]);
 
   // State for managing profile color radio button selections
-  const [profileColors, setProfileColors] = useState([
+  const [profileColors, setProfileColors] = useState<SelectOption[]>([
     {
-      checked: false,
-      profileColor: "Green",
+      value: false,
+      label: "Green",
     },
     {
-      checked: false,
-      profileColor: "Blue",
+      value: false,
+      label: "Blue",
     },
     {
-      checked: false,
-      profileColor: "Red",
+      value: false,
+      label: "Red",
     },
     {
-      checked: false,
-      profileColor: "Default",
+      value: true,
+      label: "Default",
     },
   ]);
 
@@ -184,36 +186,15 @@ const EmployeeForm = () => {
             />
 
             {/* Gender radio buttons */}
-            <div className="radio-btns-container">
-              <div className="flex">
-                <label className="required">Gender</label>
-                <div className="radio-btns">
-                  {gender.map((data, index) => {
-                    return (
-                      <CheckBox
-                        key={index}
-                        id={`gender-${index}`}
-                        className="radio-btn"
-                        label={data.genderItem}
-                        type="radio"
-                        variant="circle"
-                        // defaultChecked={d}
-                        {...register("gender", {
-                          required: "Gender is required",
-                        })}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Display validation error message if any */}
-              {errors.gender && (
-                <p className="error-message">
-                  {errors.gender.message?.toString()}
-                </p>
-              )}
-            </div>
+            <CheckboxGroup
+              label="Gender"
+              required
+              options={gender}
+              errors={errors}
+              {...register("gender", {
+                required: "Gender is required",
+              })}
+            />
 
             <InputField
               inputLabel="Employee #"
@@ -249,53 +230,35 @@ const EmployeeForm = () => {
               inputLabel="Gross Salary $PY"
               placeholder="Please enter employee gross salary"
               type="number"
-              // value={grossSalary} // Controlled input value
               onInput={(e) => {
-                const formattedValue = formatNumberWithSpaces(e.target.value);
+                const formattedValue = formatNumberWithSpaces(
+                  e.currentTarget.value
+                );
+
                 setValue("grossSalary", formattedValue, {
                   shouldValidate: true,
-                }); // Update field value
+                });
               }}
               defaultValue={employeeData.data?.grossSalary}
               {...register("grossSalary", {
                 required: "Gross Salary is required",
                 pattern: {
-                  value: /^[0-9]+$/, // Regular expression to allow only numbers
+                  value: /^[0-9]+$/,
                   message: "Employee number must contain only numbers",
                 },
               })}
               errors={errors}
             />
-            <div className="radio-btns-container">
-              <div className="flex">
-                <label>Employee Profile Colour</label>
-                <div className="radio-btns">
-                  {profileColors.map((item, index) => {
-                    return (
-                      <CheckBox
-                        key={index}
-                        id={`color-${index}`}
-                        className="form-checkbox"
-                        label={item.profileColor}
-                        type="radio"
-                        variant="box"
-                        // checked={item.checked}
-                        {...register("profileColour", {
-                          required: "Profile colour is required",
-                        })}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
 
-              {/* Display validation error message if any */}
-              {errors.profileColour && (
-                <p className="error-message">
-                  {errors.profileColour.message?.toString()}
-                </p>
-              )}
-            </div>
+            <CheckboxGroup
+              label="Employee Profile Color"
+              required
+              options={profileColors}
+              errors={errors}
+              {...register("profileColour", {
+                required: "Profile color is required",
+              })}
+            />
           </div>
         </div>
       </form>

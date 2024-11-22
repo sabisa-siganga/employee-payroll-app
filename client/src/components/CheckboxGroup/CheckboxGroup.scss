@@ -1,0 +1,17 @@
+.radio-btns-container {
+  display: flex;
+
+  .radio-btns {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+    max-width: 335px;
+
+    .radio-btn {
+      .input-container {
+        align-items: center;
+        column-gap: 8px;
+      }
+    }
+  }
+}

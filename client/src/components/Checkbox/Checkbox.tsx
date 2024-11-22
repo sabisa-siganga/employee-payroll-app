@@ -11,6 +11,7 @@ interface Props {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   checked?: boolean;
   defaultChecked?: boolean;
+  value?: string | number | boolean;
   type?: "radio"; // Default type is "radio"
   variant: "circle" | "box";
 }
@@ -25,6 +26,7 @@ const CheckBox = forwardRef(
       onChange,
       name,
       className,
+      value,
       checked,
       defaultChecked,
       type = "radio",
@@ -42,6 +44,7 @@ const CheckBox = forwardRef(
               ref={ref}
               id={id}
               onChange={onChange}
+              value={value?.toString()}
               name={name}
               checked={checked}
               defaultChecked={defaultChecked}
@@ -53,6 +56,7 @@ const CheckBox = forwardRef(
               <input
                 type={type}
                 ref={ref}
+                value={value?.toString()}
                 id={id}
                 onChange={onChange}
                 name={name}

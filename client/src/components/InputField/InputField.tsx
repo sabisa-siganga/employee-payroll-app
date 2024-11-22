@@ -41,11 +41,11 @@ const InputField = forwardRef(
 
     return (
       <div className={`input-field ${className ?? ""}`}>
-        {/* Container for label and input field */}
+        <label htmlFor={id} className={required ? "required" : ""}>
+          {inputLabel}
+        </label>
+
         <div className="input-container">
-          <label htmlFor={id} className={required ? "required" : ""}>
-            {inputLabel}
-          </label>
           <input
             type="text"
             onChange={onChange}
@@ -57,10 +57,12 @@ const InputField = forwardRef(
             name={name}
             onInput={onInput}
           />
-        </div>
 
-        {/* Display validation error message if any */}
-        {error && <p className="error-message">{error.message?.toString()}</p>}
+          {/* Display validation error message if any */}
+          {error && (
+            <p className="error-message">{error.message?.toString()}</p>
+          )}
+        </div>
       </div>
     );
   }

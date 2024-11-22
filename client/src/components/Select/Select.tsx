@@ -1,14 +1,8 @@
 import React, { ForwardedRef, forwardRef } from "react";
 import "./Select.scss";
 import { FieldErrors } from "react-hook-form";
+import { SelectOption } from "../../interfaces/types";
 
-// Define the structure of each option for the Select component
-export interface SelectOption {
-  label: string;
-  value: string;
-}
-
-// Define the props interface for the Select component
 interface Props {
   id?: string;
   selectLabel: string;
@@ -31,9 +25,8 @@ const Select = forwardRef(
 
     return (
       <div className="select-cont">
-        {/* Container for label and select field */}
+        <label htmlFor={id}>{selectLabel}</label>
         <div className="select-container">
-          <label htmlFor={id}>{selectLabel}</label>
           <select
             className={className}
             ref={ref}
@@ -43,16 +36,17 @@ const Select = forwardRef(
           >
             {options.map((option, index) => {
               return (
-                <option key={index} value={option.value}>
+                <option key={index} value={option.value.toString()}>
                   {option.label}
                 </option>
               );
             })}
           </select>
+          {/* Display validation error message if any */}
+          {error && (
+            <p className="error-message">{error.message?.toString()}</p>
+          )}
         </div>
-
-        {/* Display validation error message if any */}
-        {error && <p className="error-message">{error.message?.toString()}</p>}
       </div>
     );
   }
