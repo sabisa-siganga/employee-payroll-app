@@ -15,3 +15,9 @@ export const getEmployees = async (req: Request, res: Response) => {
     });
   }
 };
+
+const addEmployee = async () => {
+  try {
+  } catch (error) {}
+};
+const editEmployee = async () => {};

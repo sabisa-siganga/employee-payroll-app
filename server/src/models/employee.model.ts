@@ -13,7 +13,6 @@ type EmployeeCreationAttributes = Optional<
   "id" | "createdAt"
 >;
 
-
 const Employee: ModelDefined<EmployeeAttributes, EmployeeCreationAttributes> =
   dbSetup.define(
     "Employee",
@@ -23,14 +22,38 @@ const Employee: ModelDefined<EmployeeAttributes, EmployeeCreationAttributes> =
         primaryKey: true,
         autoIncrement: true,
       },
-      EmployeeCode: {
+      firstName: {
         type: DataTypes.STRING(100),
         allowNull: false,
-        field: "Employee_code",
+        field: "first_name",
       },
-      name: {
+      lastName: {
         type: DataTypes.STRING(50),
         allowNull: false,
+        field: "last_name",
+      },
+      salutation: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+      },
+      gender: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+      },
+      employeeNumber: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        field: "employee_number",
+      },
+      grossSalary: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        field: "gross_salary",
+      },
+      profileColour: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        field: "profile_colour",
       },
       createdAt: {
         type: DataTypes.DATE,
