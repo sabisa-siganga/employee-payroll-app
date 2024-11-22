@@ -74,8 +74,8 @@ The primary motivation for creating this app was to demonstrate clean architectu
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
-   cd employee-management-app
+   git clone https://github.com/sabisa-siganga/employee-payroll-app.git
+   cd employee-payroll-app
    ```
 2. markdown
    Copy code
