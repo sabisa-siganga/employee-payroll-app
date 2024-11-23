@@ -9,10 +9,11 @@ interface Props {
   readOnly?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string;
-  type?: "text" | "radio" | "email" | "checkbox" | "number"; // Supported input types
+  type?: "text" | "email" | "number"; // Supported input types
   inputLabel: string;
   id?: string;
   required?: boolean;
+  disabled?: boolean;
   defaultValue?: string;
   errors?: FieldErrors; // Errors object from react-hook-form for validation messages
   name: string;
@@ -24,6 +25,7 @@ const InputField = forwardRef(
   (props: Props, ref: ForwardedRef<HTMLInputElement>) => {
     // Destructure props
     const {
+      disabled,
       className,
       placeholder,
       required,
@@ -36,6 +38,7 @@ const InputField = forwardRef(
       name,
       readOnly,
       onInput,
+      type = "text",
     } = props;
 
     // Extract the error for the current field from the errors object
@@ -49,13 +52,14 @@ const InputField = forwardRef(
 
         <div className="input-container">
           <input
-            type="text"
+            type={type}
             onChange={onChange}
             value={value}
             placeholder={placeholder}
             readOnly={readOnly}
             id={id}
             ref={ref}
+            disabled={disabled}
             defaultValue={defaultValue}
             name={name}
             onInput={onInput}

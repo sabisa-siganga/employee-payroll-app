@@ -14,8 +14,8 @@
     color: #000;
 
     &:after {
-      content: "*";
-      color: red;
+      content: " *";
+      color: #000;
       font-size: 18px;
     }
   }

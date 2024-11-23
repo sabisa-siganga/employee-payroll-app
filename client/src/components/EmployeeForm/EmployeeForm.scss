@@ -21,8 +21,20 @@
       margin-bottom: 40px;
 
       .save-btn {
-        background: #2b78e4;
+        background: #808183;
         color: #fff;
+
+        &.green {
+          background: #1cf15c;
+        }
+
+        &.blue {
+          background: #2b78e4;
+        }
+
+        &.red {
+          background: rgb(245, 16, 16);
+        }
       }
     }
     .input-fields-container {
@@ -108,13 +120,19 @@
         }
       }
     }
+
+    .input-align-right {
+      input {
+        text-align: right;
+      }
+    }
   }
 }
 
 .required {
   &:after {
-    content: "*";
-    color: #ff0000;
+    content: " *";
+    color: #000;
     font-size: 18px;
   }
 }

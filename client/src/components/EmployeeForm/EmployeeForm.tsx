@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./EmployeeForm.scss";
 import InputField from "../InputField/InputField";
 import Button from "../Button/Button";
@@ -6,6 +6,7 @@ import Select from "../Select/Select";
 
 import {
   addEmployee,
+  editEmployee,
   Employee,
   employeeFormHandler,
 } from "../../store/slices/employeeSlice";
@@ -45,40 +46,50 @@ const salutationSelect: SelectOption[] = [
 
 const profileColors: SelectOption[] = [
   {
-    value: "green",
+    value: "Green",
     label: "Green",
   },
   {
-    value: "blue",
+    value: "Blue",
     label: "Blue",
   },
   {
-    value: "red",
+    value: "Red",
     label: "Red",
   },
   {
-    value: "default",
+    value: "Default",
     label: "Default",
   },
 ];
 
 const gender = [
   {
-    value: "male",
+    value: "Male",
     label: "Male",
   },
   {
-    value: "female",
+    value: "Female",
     label: "Female",
   },
   {
-    value: "unspecified",
+    value: "Unspecified",
     label: "Unspecified",
   },
 ];
 
 const formatNumberWithSpaces = (value: string) => {
   return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+};
+
+const defaultValues = {
+  firstName: "",
+  lastName: "",
+  grossSalary: "",
+  salutation: "",
+  profileColour: "Default",
+  gender: "",
+  employeeNumber: "",
 };
 
 const EmployeeForm = () => {
@@ -93,23 +104,38 @@ const EmployeeForm = () => {
     register,
     handleSubmit,
     watch,
-
-    formState: { errors, isValid },
+    formState: { errors },
     setValue,
   } = useForm<Employee>({
     mode: "all", // Enable validation on any change
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      grossSalary: "",
-      salutation: "",
-      profileColour: "",
-      gender: "",
-      employeeNumber: "",
-    },
+    defaultValues,
   });
 
   const formValues = watch();
+
+  useEffect(() => {
+    let data = defaultValues;
+
+    if (employeeData.data) {
+      data = {
+        firstName: employeeData.data.firstName,
+        lastName: employeeData.data.lastName,
+        grossSalary: employeeData.data.grossSalary,
+        salutation: employeeData.data.salutation,
+        profileColour: employeeData.data.profileColour,
+        gender: employeeData.data.gender,
+        employeeNumber: employeeData.data.employeeNumber,
+      };
+    }
+
+    setValue("firstName", data.firstName);
+    setValue("lastName", data.lastName);
+    setValue("grossSalary", data.grossSalary);
+    setValue("salutation", data.salutation);
+    setValue("profileColour", data.profileColour);
+    setValue("gender", data.gender);
+    setValue("employeeNumber", data.employeeNumber);
+  }, [employeeData.data, setValue]);
 
   // Cancel button handler: Dispatches an action to cancel all changes
   const onCancel = () => {
@@ -118,9 +144,38 @@ const EmployeeForm = () => {
 
   // Save button handler: Placeholder for dispatching an action to save employee data
   const onSave = (data: Employee) => {
-    // dispatch(());
+    // Edit selected employee if employeeData.data is present.
+    if (employeeData.data) {
+      dispatch(
+        editEmployee({
+          index: employeeData.index,
+          data,
+        })
+      );
+    } else {
+      dispatch(addEmployee(data));
+    }
+  };
 
-    addEmployee(data);
+  const genderLogic = (value: string) => {
+    let gender = "";
+
+    switch (value.toLowerCase()) {
+      case "mr.":
+        gender = "Male";
+        break;
+      case "ms.":
+      case "mrs.":
+        gender = "Female";
+        break;
+      case "mx.":
+        gender = "Unspecified";
+        break;
+    }
+
+    if (gender) {
+      setValue("gender", gender);
+    }
   };
 
   return (
@@ -133,7 +188,10 @@ const EmployeeForm = () => {
           <Button className="cancel-btn" onClick={onCancel}>
             Cancel
           </Button>
-          <Button disabled={!isValid} type="submit" className="save-btn">
+          <Button
+            type="submit"
+            className={`save-btn ${formValues.profileColour.toLowerCase()}`}
+          >
             Save
           </Button>
         </div>
@@ -145,7 +203,7 @@ const EmployeeForm = () => {
               placeholder="Please enter first name(s)"
               type="text"
               required
-              defaultValue={employeeData.data?.firstName}
+              // defaultValue={employeeData.data?.firstName}
               {...register("firstName", {
                 required: "First Name(s) is required",
                 pattern: {
@@ -160,12 +218,11 @@ const EmployeeForm = () => {
               placeholder="Please enter last name"
               type="text"
               required
-              defaultValue={employeeData.data?.lastName}
               {...register("lastName", {
                 required: "Last Name is required",
                 pattern: {
                   value: /^[A-Za-z\s]+$/i, // Regular expression to allow only alphabets and spaces
-                  message: "First Name should contain only alphabets",
+                  message: "Last Name should contain only alphabets",
                 },
               })}
               errors={errors}
@@ -178,6 +235,9 @@ const EmployeeForm = () => {
               options={salutationSelect}
               {...register("salutation", {
                 required: "Salutation is required",
+                onChange(event: React.ChangeEvent<HTMLInputElement>) {
+                  genderLogic(event.target.value);
+                },
               })}
               errors={errors}
             />
@@ -195,14 +255,13 @@ const EmployeeForm = () => {
 
             <InputField
               inputLabel="Employee #"
-              placeholder="Please enter employee number"
-              type="number"
+              placeholder="00000000"
               required
-              defaultValue={employeeData.data?.employeeNumber}
+              className="field input-align-right"
               {...register("employeeNumber", {
                 required: "Employee number is required",
                 pattern: {
-                  value: /^[A-z0-9]+$/,
+                  value: /^[0-9]+$/,
                   message: "Employee number must contain only numbers",
                 },
               })}
@@ -216,17 +275,16 @@ const EmployeeForm = () => {
               inputLabel="Full Name"
               placeholder="Please enter full name"
               type="text"
+              disabled
               readOnly
               name="fullName"
               value={`${formValues.firstName} ${formValues.lastName}`.trim()}
-              defaultValue={employeeData.data?.fullName}
               errors={errors}
             />
             <InputField
-              className="field"
+              className="field input-align-right"
               inputLabel="Gross Salary $PY"
-              placeholder="Please enter employee gross salary"
-              type="number"
+              placeholder="20 000"
               onInput={(e) => {
                 const formattedValue = formatNumberWithSpaces(
                   e.currentTarget.value
@@ -236,10 +294,9 @@ const EmployeeForm = () => {
                   shouldValidate: true,
                 });
               }}
-              defaultValue={employeeData.data?.grossSalary}
               {...register("grossSalary", {
                 pattern: {
-                  value: /^[0-9]+$/,
+                  value: /^[0-9\s]+$/,
                   message: "Employee number must contain only numbers",
                 },
               })}
@@ -248,9 +305,19 @@ const EmployeeForm = () => {
 
             <CheckboxGroup
               label="Employee Profile Color"
-              required
               options={profileColors}
               errors={errors}
+              selectedOption={
+                employeeData.data
+                  ? {
+                      value: employeeData.data.profileColour,
+                      label: employeeData.data.profileColour,
+                    }
+                  : {
+                      value: "Default",
+                      label: "Default",
+                    }
+              }
               {...register("profileColour", {
                 required: "Profile color is required",
               })}

@@ -10,11 +10,13 @@ interface Props {
   name: string;
   errors?: FieldErrors;
   options: SelectOption[];
+  selectedOption?: SelectOption;
 }
 
 const CheckboxGroup = forwardRef(
   (props: Props, ref: ForwardedRef<HTMLInputElement>) => {
-    const { required, label, errors, options, name, ...rest } = props;
+    const { required, label, errors, options, name, selectedOption, ...rest } =
+      props;
 
     const error = errors && errors[name];
 
@@ -35,7 +37,11 @@ const CheckboxGroup = forwardRef(
                   variant="circle"
                   name={name}
                   value={option.value}
-                  // defaultChecked={d}
+                  defaultChecked={
+                    selectedOption
+                      ? selectedOption.value === option.value
+                      : option.value === "default"
+                  }
                   ref={ref}
                 />
               );

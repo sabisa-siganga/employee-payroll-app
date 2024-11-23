@@ -3,7 +3,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 // Define the structure of an Employee object
 export interface Employee {
   firstName: string;
-  fullName: string;
   lastName: string;
   grossSalary: string;
   salutation: string;
@@ -49,11 +48,13 @@ const employeeSlice = createSlice({
     // Reducer to add a new employee
     addEmployee(state, action: PayloadAction<Employee>) {
       state.employees.push(action.payload);
+      state.openForm = false;
     },
 
     // Reducer to edit an existing employee
     editEmployee(state, action: PayloadAction<EmployeeDetails>) {
       state.employees[action.payload.index] = action.payload.data;
+      state.openForm = false;
     },
 
     // Reducer to handle opening/closing the employee form
