@@ -1,10 +1,14 @@
 import { Router } from "express";
-import { getEmployees } from "../controllers/employee.controller";
+import {
+  getEmployees,
+  addEmployee,
+  editEmployee,
+} from "../controllers/employee.controller";
 
 const routes = Router();
 
 routes.get("/", getEmployees);
-routes.get("/", addEmployee);
-routes.get("/", editEmployee);
+routes.post("/", addEmployee);
+routes.put("/:employeeId", editEmployee);
 
 export default routes;

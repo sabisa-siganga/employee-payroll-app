@@ -2,18 +2,21 @@ import { DataTypes, ModelDefined, Optional } from "sequelize";
 import dbSetup from "../config/db";
 
 // Define the attributes for the Employee model, representing each Employee's properties
-interface EmployeeAttributes {
+export interface EmployeeAttributes {
   id: number;
-  name: string;
+  firstName: string;
+  lastName: string;
+  salutation: string;
+  gender: string;
+  employeeNumber: string;
+  grossSalary: string;
+  profileColour: string;
   createdAt: Date;
 }
 
-type EmployeeCreationAttributes = Optional<
-  EmployeeAttributes,
-  "id" | "createdAt"
->;
+export type EmployeeCreation = Optional<EmployeeAttributes, "id" | "createdAt">;
 
-const Employee: ModelDefined<EmployeeAttributes, EmployeeCreationAttributes> =
+const Employee: ModelDefined<EmployeeAttributes, EmployeeCreation> =
   dbSetup.define(
     "Employee",
     {
