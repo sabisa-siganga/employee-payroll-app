@@ -1,24 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.scss";
-import Table from "../Table/Table";
-import Button from "../Button/Button";
-import EmployeeForm from "../EmployeeForm/EmployeeForm";
-import { useDispatch, useSelector } from "react-redux";
+import Table from "../components/Table/Table";
+import Button from "../components/Button/Button";
+import EmployeeForm from "../components/EmployeeForm/EmployeeForm";
 import {
   employeeFormHandler,
+  resetForm,
   selectEmployee,
-} from "../../store/slices/employeeSlice";
-import { RootState } from "../../store/store";
+} from "../store/slices/employeeSlice";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { fetchEmployees } from "../store/actions/actions";
 
 // Define the main App component
 function App() {
   // Hook to dispatch Redux actions
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   // Access employee state from the Redux store
-  const { employees, openForm } = useSelector(
-    (state: RootState) => state.employee
+  const { employees, openForm, loading } = useAppSelector(
+    (state) => state.employee
   );
+
+  useEffect(() => {
+    dispatch(resetForm());
+    dispatch(fetchEmployees());
+    console.log(employees);
+  }, [dispatch]);
 
   // Handle row selection in the Table component
   const onTableRowSelect = (index: number) => {
@@ -41,7 +48,17 @@ function App() {
       </div>
 
       {/* Employee Table */}
-      <Table data={employees} onRowSelect={onTableRowSelect} />
+      {!loading && employees.length > 0 && (
+        <Table data={employees} onRowSelect={onTableRowSelect} />
+      )}
+
+      {!loading && employees.length === 0 && (
+        <div className="text-center pt-8 mb-8">No employees found.</div>
+      )}
+
+      {loading && (
+        <div className="text-center pt-8 mb-8">Loading employees...</div>
+      )}
 
       {/* If openForm is true open employee form */}
       {openForm && <EmployeeForm />}

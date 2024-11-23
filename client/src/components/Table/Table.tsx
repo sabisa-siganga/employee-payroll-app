@@ -1,6 +1,6 @@
 import React from "react";
 import "./Table.scss";
-import { Employee } from "../../store/slices/employeeSlice";
+import { Employee } from "../../interfaces/types";
 
 // Define the props interface for the Table component
 interface Props {

@@ -1,33 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-// Define the structure of an Employee object
-export interface Employee {
-  firstName: string;
-  lastName: string;
-  grossSalary: string;
-  salutation: string;
-  profileColour: string;
-  gender: string;
-  employeeNumber: string;
-}
+import { addEmployee, editEmployee, fetchEmployees } from "../actions/actions";
+import { Employee, EmployeeState } from "../../interfaces/types";
 
 // Define the structure for editing an employee
 interface EmployeeDetails {
   index: number; // Index of the employee in the array
   data: Employee; // Updated employee data
-}
-
-// Define the structure of individual employee data
-export interface EmployeeData {
-  index: number;
-  data?: Employee;
-}
-
-// Define the state structure for the employee slice
-export interface EmployeeState {
-  employeeData: EmployeeData;
-  employees: Employee[];
-  openForm: boolean;
 }
 
 // Define the initial state of the employee slice
@@ -38,6 +16,8 @@ const initialState: EmployeeState = {
   },
   employees: [],
   openForm: false,
+  loading: false,
+  submittingForm: false,
 };
 
 // Create the employee slice
@@ -45,18 +25,9 @@ const employeeSlice = createSlice({
   name: "employee", // Name of the slice
   initialState,
   reducers: {
-    // Reducer to add a new employee
-    addEmployee(state, action: PayloadAction<Employee>) {
-      state.employees.push(action.payload);
+    resetForm(state) {
       state.openForm = false;
     },
-
-    // Reducer to edit an existing employee
-    editEmployee(state, action: PayloadAction<EmployeeDetails>) {
-      state.employees[action.payload.index] = action.payload.data;
-      state.openForm = false;
-    },
-
     // Reducer to handle opening/closing the employee form
     employeeFormHandler(state, action: PayloadAction<boolean>) {
       state.employeeData = {
@@ -76,15 +47,63 @@ const employeeSlice = createSlice({
       state.openForm = true; // Open the employee form
     },
   },
+  extraReducers(builder) {
+    builder.addCase(fetchEmployees.pending, (state) => {
+      state.loading = true;
+    });
+
+    builder.addCase(
+      fetchEmployees.fulfilled,
+      (state, action: PayloadAction<Employee[]>) => {
+        state.loading = false;
+        state.employees = action.payload;
+      }
+    );
+
+    builder.addCase(fetchEmployees.rejected, (state) => {
+      state.loading = false;
+      state.employees = [];
+    });
+
+    builder.addCase(addEmployee.pending, (state) => {
+      state.submittingForm = true;
+    });
+
+    builder.addCase(
+      addEmployee.fulfilled,
+      (state, action: PayloadAction<Employee>) => {
+        state.employees.push(action.payload);
+        state.openForm = false;
+        state.submittingForm = false; // Reset form loading state
+      }
+    );
+
+    builder.addCase(addEmployee.rejected, (state) => {
+      state.submittingForm = false;
+    });
+
+    builder.addCase(editEmployee.pending, (state) => {
+      state.submittingForm = true;
+    });
+
+    builder.addCase(
+      editEmployee.fulfilled,
+      (state, action: PayloadAction<EmployeeDetails>) => {
+        state.employees[action.payload.index] = action.payload.data;
+        state.openForm = false;
+        state.submittingForm = false; // Reset form loading state
+      }
+    );
+
+    builder.addCase(editEmployee.rejected, (state) => {
+      state.submittingForm = false;
+    });
+  },
 });
 
 // Export actions for use in components
-export const {
-  addEmployee,
-  editEmployee,
-  selectEmployee,
-  employeeFormHandler,
-} = employeeSlice.actions;
+export const { selectEmployee, employeeFormHandler, resetForm } =
+  employeeSlice.actions;
 
 // Export the reducer for integration with the Redux store
 export default employeeSlice.reducer;

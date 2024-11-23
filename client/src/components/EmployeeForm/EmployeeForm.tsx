@@ -1,20 +1,15 @@
 import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import "./EmployeeForm.scss";
 import InputField from "../InputField/InputField";
 import Button from "../Button/Button";
 import Select from "../Select/Select";
 
-import {
-  addEmployee,
-  editEmployee,
-  Employee,
-  employeeFormHandler,
-} from "../../store/slices/employeeSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store/store";
-import { useForm } from "react-hook-form";
+import { employeeFormHandler } from "../../store/slices/employeeSlice";
+import { RootState, useAppDispatch, useAppSelector } from "../../store/store";
 import CheckboxGroup from "../CheckboxGroup/CheckboxGroup";
-import { SelectOption } from "../../interfaces/types";
+import { Employee, SelectOption } from "../../interfaces/types";
+import { addEmployee, editEmployee } from "../../store/actions/actions";
 
 // Predefined salutation options for the Select dropdown
 const salutationSelect: SelectOption[] = [
@@ -94,10 +89,12 @@ const defaultValues = {
 
 const EmployeeForm = () => {
   // Access employee data from the Redux store
-  const { employeeData } = useSelector((state: RootState) => state.employee);
+  const { employeeData, submittingForm } = useAppSelector(
+    (state: RootState) => state.employee
+  );
 
   // Hook to dispatch Redux actions
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   // React Hook Form for managing form validation and submission
   const {
@@ -143,13 +140,14 @@ const EmployeeForm = () => {
   };
 
   // Save button handler: Placeholder for dispatching an action to save employee data
-  const onSave = (data: Employee) => {
+  const onSave = (data: Omit<Employee, "id">) => {
     // Edit selected employee if employeeData.data is present.
     if (employeeData.data) {
       dispatch(
         editEmployee({
           index: employeeData.index,
-          data,
+          employeeId: employeeData.data.id,
+          employee: data,
         })
       );
     } else {
@@ -190,9 +188,10 @@ const EmployeeForm = () => {
           </Button>
           <Button
             type="submit"
+            disabled={submittingForm}
             className={`save-btn ${formValues.profileColour.toLowerCase()}`}
           >
-            Save
+            {!submittingForm ? "Save" : "Saving ..."}
           </Button>
         </div>
         {/* Form input fields */}

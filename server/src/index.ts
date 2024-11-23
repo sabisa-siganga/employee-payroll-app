@@ -1,13 +1,15 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import dotenv from "dotenv";
-import path from "path";
+import cors from "cors";
 import routes from "./routes";
 
 // Load environment variables from a .env file into process.env
 dotenv.config();
 
- // Initialize Express application
+// Initialize Express application
 const app = express();
+
+app.use(cors());
 
 // Middleware to parse incoming JSON requests
 app.use(express.json());

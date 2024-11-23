@@ -1,7 +1,12 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import {
+  combineReducers,
+  configureStore,
+  createAsyncThunk,
+} from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import employeeReducer from "./slices/employeeSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 // Combine all reducers into a root reducer
 const rootReducer = combineReducers({
@@ -21,6 +26,14 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 const makeStore = () =>
   configureStore({
     reducer: persistedReducer, // Use the persisted reducer
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          // Ignore redux-persist actions in serializable checks
+          ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+        },
+      }),
+    // Enable Redux DevTools in non-production environment
     devTools: process.env.NODE_ENV !== "production", // Enable Redux DevTools in non-production environments
   });
 
@@ -32,3 +45,10 @@ export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
+export const useAppSelector = useSelector.withTypes<RootState>();
+export const createAppAsyncThunk = createAsyncThunk.withTypes<{
+  state: RootState;
+  dispatch: AppDispatch;
+}>();
