@@ -4,6 +4,7 @@ import CheckBox from "../Checkbox/Checkbox";
 import { FieldErrors } from "react-hook-form";
 import { SelectOption } from "../../interfaces/types";
 
+// Define the props interface for the CheckboxGroup component
 interface Props {
   required?: boolean;
   label: string;
@@ -28,7 +29,7 @@ const CheckboxGroup = forwardRef(
             {options.map((option, index) => {
               return (
                 <CheckBox
-                  {...rest}
+                  {...rest} // Spread operator to include other props
                   key={`checkbox-group-key-${index}`}
                   id={`checkbox-group-${index}-${name}`}
                   className="radio-btn"
@@ -39,8 +40,8 @@ const CheckboxGroup = forwardRef(
                   value={option.value}
                   defaultChecked={
                     selectedOption
-                      ? selectedOption.value === option.value
-                      : option.value === "default"
+                      ? selectedOption.value === option.value // Check if the option is pre-selected
+                      : option.value === "default" // Default to "default" option if no selection
                   }
                   ref={ref}
                 />

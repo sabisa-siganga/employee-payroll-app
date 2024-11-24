@@ -108,11 +108,14 @@ const EmployeeForm = () => {
     defaultValues,
   });
 
+  // Watch form values to dynamically update the UI based on user input or changes
   const formValues = watch();
 
   useEffect(() => {
+    // Initialize form values with defaultValues or employee data if available
     let data = defaultValues;
 
+    // if employee data exits, populate form fields with the data
     if (employeeData.data) {
       data = {
         firstName: employeeData.data.firstName,
@@ -136,12 +139,12 @@ const EmployeeForm = () => {
 
   // Cancel button handler: Dispatches an action to cancel all changes
   const onCancel = () => {
-    dispatch(employeeFormHandler(false));
+    dispatch(employeeFormHandler(false)); // Dispatches action to close the form
   };
 
   // Save button handler: Placeholder for dispatching an action to save employee data
   const onSave = (data: Omit<Employee, "id">) => {
-    // Edit selected employee if employeeData.data is present.
+    // Dispatche action to update the selected employee if employee data is present.
     if (employeeData.data) {
       dispatch(
         editEmployee({
@@ -150,11 +153,13 @@ const EmployeeForm = () => {
           employee: data,
         })
       );
+      // Dispatches action to create a new employee if there's no employee data
     } else {
       dispatch(addEmployee(data));
     }
   };
 
+  // Automatically sets the gender based on salutation value
   const genderLogic = (value: string) => {
     let gender = "";
 
@@ -172,7 +177,7 @@ const EmployeeForm = () => {
     }
 
     if (gender) {
-      setValue("gender", gender);
+      setValue("gender", gender); // Update the gender field in the form
     }
   };
 

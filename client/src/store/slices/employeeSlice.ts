@@ -47,54 +47,64 @@ const employeeSlice = createSlice({
       state.openForm = true; // Open the employee form
     },
   },
+  // Handling extra reducers for async actions
   extraReducers(builder) {
+    // Handle the pending state for fetching employees
     builder.addCase(fetchEmployees.pending, (state) => {
       state.loading = true;
     });
 
+    // Handle the fulfilled state for fetching employees
     builder.addCase(
       fetchEmployees.fulfilled,
       (state, action: PayloadAction<Employee[]>) => {
         state.loading = false;
-        state.employees = action.payload;
+        state.employees = action.payload; // Populate the employees array
       }
     );
 
+    // Handle the rejected state for fetching employees
     builder.addCase(fetchEmployees.rejected, (state) => {
       state.loading = false;
-      state.employees = [];
+      state.employees = []; // Clear the employees array
     });
 
+    // Handle the pending state for adding an employee
     builder.addCase(addEmployee.pending, (state) => {
       state.submittingForm = true;
     });
 
+    // Handle the fulfilled state for adding an employee
     builder.addCase(
       addEmployee.fulfilled,
       (state, action: PayloadAction<Employee>) => {
-        state.employees.push(action.payload);
+        state.employees.push(action.payload); // Add the new employee to the list
         state.openForm = false;
-        state.submittingForm = false; // Reset form loading state
+        state.submittingForm = false; // Reset form submission state
       }
     );
 
+    // Handle the rejected state for adding an employee
     builder.addCase(addEmployee.rejected, (state) => {
       state.submittingForm = false;
     });
 
+    // Handle the pending state for editing an employee
     builder.addCase(editEmployee.pending, (state) => {
       state.submittingForm = true;
     });
 
+    // Handle the fulfilled state for editing an employee
     builder.addCase(
       editEmployee.fulfilled,
       (state, action: PayloadAction<EmployeeDetails>) => {
-        state.employees[action.payload.index] = action.payload.data;
+        state.employees[action.payload.index] = action.payload.data; // Update the employee in the list
         state.openForm = false;
         state.submittingForm = false; // Reset form loading state
       }
     );
 
+    // Handle the rejected state for editing an employee
     builder.addCase(editEmployee.rejected, (state) => {
       state.submittingForm = false;
     });

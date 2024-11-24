@@ -43,6 +43,9 @@ export const store = makeStore();
 // Create the persistor for the store to handle rehydration
 export const persistor = persistStore(store);
 
+// Provides type-safe hooks (`useAppDispatch`, `useAppSelector`) and async thunk (`createAppAsyncThunk`)
+// to ensure consistent and accurate access to the Redux state (`RootState`) and dispatch (`AppDispatch`).
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 

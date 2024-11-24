@@ -4,12 +4,17 @@ import Employee, {
   EmployeeCreation,
 } from "../models/employee.model";
 
+/**
+ *  Function to get a list of employees
+ */
 export const getEmployees = async (req: Request, res: Response) => {
   try {
+    // Fetch all employees from the database, ordered by creation date in descending order
     const employeeList = await Employee.findAll({
       order: [["createdAt", "DESC"]],
     });
 
+    // Map the employee data to return only the required field
     const data = employeeList.map((employee) => {
       return {
         id: employee.getDataValue("id"),
@@ -37,6 +42,9 @@ export const getEmployees = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * Function to add a new employee
+ */
 export const addEmployee = async (req: Request, res: Response) => {
   try {
     const {
@@ -49,6 +57,7 @@ export const addEmployee = async (req: Request, res: Response) => {
       employeeNumber,
     } = req.body as EmployeeCreation;
 
+    // Create a new employee record in the database
     const newEmployee = await Employee.create({
       firstName,
       lastName,
@@ -82,10 +91,15 @@ export const addEmployee = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ *  Function to edit an existing employee
+ */
 export const editEmployee = async (req: Request, res: Response) => {
   try {
+    // Find the employee by the primary key (ID) provided in the URL parameter
     const employee = await Employee.findByPk(req.params.employeeId);
 
+    // If the employee does not exist, send a 404 response
     if (!employee) {
       res.status(404).json({
         success: false,
@@ -104,6 +118,7 @@ export const editEmployee = async (req: Request, res: Response) => {
       employeeNumber,
     } = req.body as EmployeeAttributes;
 
+    // Update the employee record with the new details
     await employee.update({
       firstName,
       lastName,

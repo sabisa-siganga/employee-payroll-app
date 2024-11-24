@@ -2,13 +2,13 @@
 
 ## Project Description
 
-The **Employee Management Application** is designed to simplify the process of managing employee data within an organization. This web-based solution allows users to:
+The **Employee Management Application** is designed to simplify the process of managing employee data within an organization. It allows users to:
 
 - Add, edit, and manage employee records.
-- Maintain detailed employee profiles with attributes like name, gender, salutation, and more.
-- Use persistent state storage to ensure data is retained across sessions.
+- Maintain detailed employee profiles with attributes such as name, salary, gender, and more.
+- Utilize persistent state storage to ensure data is retained across browser sessions.
 
-The primary motivation for creating this app was to demonstrate clean architecture, modular design, and the integration of modern web technologies. It serves as a boilerplate for creating scalable and maintainable full-stack applications.
+This project demonstrates the use of a modern front-end stack for form validation and state management, along with a backend server running locally at `http://localhost:4000`. The backend uses **Zod** for schema validation to ensure data integrity.
 
 ---
 
@@ -16,51 +16,35 @@ The primary motivation for creating this app was to demonstrate clean architectu
 
 ### Frontend
 
-- **React**: A library for building user interfaces with reusable components.
-- **TypeScript**: A typed superset of JavaScript that improves code reliability and developer productivity.
-- **SASS**: A CSS preprocessor for cleaner and more manageable styling.
-- **Tailwind CSS**: A utility-first CSS framework for building responsive, modern UI efficiently.
+- **React**: A library for building dynamic and reusable user interfaces.
+- **Redux Toolkit**: Simplified state management with built-in support for middleware and advanced patterns.
+- **Redux Thunk**: Middleware for handling asynchronous operations, such as API calls.
+- **TypeScript**: A typed superset of JavaScript for better code reliability and maintainability.
+- **React Hook Form**: A lightweight library for handling form validation and state management on the frontend.
+- **SASS**: A CSS preprocessor for cleaner and more manageable styles.
+- **Redux Persist**: Ensures the Redux store state is persisted across browser reloads.
 
 ### Backend
 
-- **Node.js (Express)**: A fast and lightweight framework for building RESTful APIs.
-
-### State Management
-
-- **Redux Toolkit**: Simplifies global state management with built-in features for actions and reducers.
-- **Redux Persist**: Enables persisting the Redux store state across browser sessions.
+- **Node.js**: A runtime environment for running JavaScript on the server.
+- **Express.js**: A lightweight and flexible framework for building RESTful APIs.
+- **Zod**: A TypeScript-first schema validation library used to validate API requests and responses.
 
 ---
 
-## Thought Process
+## Features
 
-1. **Understanding the Problem**  
-   The goal was to create an application where organizations can manage employee records effortlessly, leveraging a clear and user-friendly interface.
+1. **Frontend**:
 
-2. **Modular Design**
+   - A responsive UI built with React and styled with SASS.
+   - State management with Redux Toolkit, ensuring predictable state transitions.
+   - Form validation using **React Hook Form**, ensuring user input is validated dynamically on the client-side.
+   - Persistent state across browser sessions with Redux Persist.
 
-   - Split the application into reusable components (`Button`, `InputField`, `Select`, etc.).
-   - Ensure that each component adheres to the Single Responsibility Principle.
-
-3. **State Management**
-
-   - Used **Redux Toolkit** to manage application state globally, ensuring a predictable flow.
-   - Enabled persistence using **Redux Persist** to maintain state across browser reloads.
-
-4. **Styling**
-
-   - Combined **SASS** for nested and reusable styles with **Tailwind CSS** for rapid and responsive UI design.
-
-5. **Backend Design**
-
-   - Built a backend API using **Node.js (Express)** to handle CRUD operations and ensure scalability.
-   - Kept the API clean and modular to support potential future integrations.
-
-6. **User Experience**
-   - Designed the app to be intuitive with minimal learning curve.
-   - Focused on performance and responsiveness across devices.
-
----
+2. **Backend**:
+   - A RESTful API running on `http://localhost:4000`.
+   - Handles CRUD operations for managing employee data.
+   - **Endpoint Validation**: All API requests are validated using Zod to ensure data integrity and security.
 
 ## Getting Started
 
@@ -81,16 +65,15 @@ The primary motivation for creating this app was to demonstrate clean architectu
 
    ```
 
-2. Install dependencies:
-   npm install
-
-3. Start the development server:
-   npm start
-
-4. Start the backend server:
-   cd backend
+2. Install and Start the web server:
+   cd client
    npm install
    npm start
 
-5. Open your browser and navigate to:
+3. Install and Start the backend server:
+   cd server
+   npm install
+   npm start
+
+4. Open your browser and navigate to:
    http://localhost:3000
