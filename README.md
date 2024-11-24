@@ -73,7 +73,7 @@ This project demonstrates the use of a modern front-end stack for form validatio
 3. Install and Start the backend server:
    cd server
    npm install
-   npm start
+   npm run dev
 
 4. Open your browser and navigate to:
    http://localhost:3000
