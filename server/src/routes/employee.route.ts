@@ -4,11 +4,13 @@ import {
   addEmployee,
   editEmployee,
 } from "../controllers/employee.controller";
+import { validateData } from "../middleware/validate";
+import { EmployeeSchema } from "../middleware/schema";
 
 const routes = Router();
 
 routes.get("/", getEmployees);
-routes.post("/", addEmployee);
-routes.put("/:employeeId", editEmployee);
+routes.post("/", validateData(EmployeeSchema), addEmployee);
+routes.put("/:employeeId", validateData(EmployeeSchema), editEmployee);
 
 export default routes;
