@@ -45,6 +45,7 @@ export const addEmployee = createAsyncThunk(
 );
 
 /**
+ * Used actions to make asynchronous api calls using the thunk
  * Thunk to edit an existing employee
  */
 export const editEmployee = createAsyncThunk(
