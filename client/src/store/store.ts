@@ -9,7 +9,7 @@ import employeeReducer from "./slices/employeeSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 // Combine all reducers into a root reducer
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   employee: employeeReducer, // Register employee slice
 });
 
@@ -19,12 +19,14 @@ const persistConfig = {
   storage, // Use localStorage as the default storage
 };
 
+export type RootState = ReturnType<typeof rootReducer>;
+
 // Create a persisted reducer wrapping the root reducer
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer = persistReducer<RootState>(persistConfig, rootReducer);
 
 // Function to configure the Redux store
-const makeStore = () =>
-  configureStore({
+export const makeStore = () => {
+  return configureStore({
     reducer: persistedReducer, // Use the persisted reducer
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
@@ -36,6 +38,7 @@ const makeStore = () =>
     // Enable Redux DevTools in non-production environment
     devTools: process.env.NODE_ENV !== "production", // Enable Redux DevTools in non-production environments
   });
+};
 
 // Create the Redux store
 export const store = makeStore();
@@ -46,8 +49,8 @@ export const persistor = persistStore(store);
 // Provides type-safe hooks (`useAppDispatch`, `useAppSelector`) and async thunk (`createAppAsyncThunk`)
 // to ensure consistent and accurate access to the Redux state (`RootState`) and dispatch (`AppDispatch`).
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type AppStore = ReturnType<typeof makeStore>;
+export type AppDispatch = AppStore["dispatch"];
 
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 export const useAppSelector = useSelector.withTypes<RootState>();

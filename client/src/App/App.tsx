@@ -24,7 +24,6 @@ function App() {
   useEffect(() => {
     dispatch(resetForm());
     dispatch(fetchEmployees());
-    console.log(employees);
   }, [dispatch]);
 
   // Handle row selection in the Table component
