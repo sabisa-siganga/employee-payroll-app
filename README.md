@@ -20,7 +20,7 @@ This project demonstrates the use of a modern front-end stack for form validatio
 - **Redux Toolkit**: Simplified state management with built-in support for middleware and advanced patterns.
 - **Redux Thunk**: Middleware for handling asynchronous operations, such as API calls.
 - **TypeScript**: A typed superset of JavaScript for better code reliability and maintainability.
-- **React Hook Form**: A lightweight library for handling form validation and state management on the frontend.
+- **React Hook Form**: A lightweight library for handling form validation and form state management on the frontend.
 - **SASS**: A CSS preprocessor for cleaner and more manageable styles.
 - **Redux Persist**: Ensures the Redux store state is persisted across browser reloads.
 
